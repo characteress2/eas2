@@ -23,5 +23,18 @@ obj-$(CONFIG_SCHED_TUNE) += tune.o
 obj-$(CONFIG_CGROUP_CPUACCT) += cpuacct.o
 obj-$(CONFIG_CPU_FREQ) += cpufreq.o
 obj-$(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) += cpufreq_schedutil.o
+<<<<<<< HEAD
 obj-$(CONFIG_CPU_FREQ_GOV_PWRUTILX) += cpufreq_pwrutilx.o
 obj-y += boost.o
+=======
+obj-$(CONFIG_CPU_FREQ_GOV_ELECTROUTIL) += cpufreq_electroutil.o
+obj-$(CONFIG_CPU_FREQ_GOV_ALUCARDSCHED) += cpufreq_alucardsched.o
+obj-$(CONFIG_CPU_FREQ_GOV_DARKNESSSCHED) += cpufreq_darknesssched.o
+obj-$(CONFIG_CPU_FREQ_GOV_HELIX) += cpufreq_helix_schedutil.o
+obj-$(CONFIG_CPU_FREQ_GOV_ENERGY) += cpufreq_energy_dcfc.o
+obj-$(CONFIG_CPU_FREQ_GOV_PWRUTILX) += cpufreq_pwrutilx.o
+
+ifeq ($(call clang-ifversion, -ge, 0600, y), y)
+ccflags-y += -Wno-section
+endif
+>>>>>>> 1b8e8b5e8f3a... sched: add various eas governors
