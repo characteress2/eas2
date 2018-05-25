@@ -130,7 +130,6 @@ static inline void ext4_write_unlock_xattr(struct inode *inode, int *save)
 		ext4_clear_inode_state(inode, EXT4_STATE_NO_EXPAND);
 	up_write(&EXT4_I(inode)->xattr_sem);
 }
->>>>>>> 5781ac2... ext4: fix deadlock between inline_data and ext4_expand_extra_isize_ea()
 
 extern ssize_t ext4_listxattr(struct dentry *, char *, size_t);
 
