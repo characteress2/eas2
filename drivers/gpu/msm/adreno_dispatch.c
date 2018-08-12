@@ -1064,6 +1064,75 @@ int adreno_dispatcher_queue_cmd(struct adreno_device *adreno_dev,
 				&drawctxt->base.priv);
 		}
 	}
+}
+
+static inline int _check_context_state(struct kgsl_context *context)
+{
+	if (kgsl_context_invalid(context))
+		return -EDEADLK;
+
+	if (kgsl_context_detached(context))
+		return -ENOENT;
+
+	return 0;
+}
+
+static inline bool _verify_ib(struct kgsl_device_private *dev_priv,
+		struct kgsl_context *context, struct kgsl_memobj_node *ib)
+{
+	struct kgsl_device *device = dev_priv->device;
+	struct kgsl_process_private *private = dev_priv->process_priv;
+
+	/* The maximum allowable size for an IB in the CP is 0xFFFFF dwords */
+	if (ib->size == 0 || ((ib->size >> 2) > 0xFFFFF)) {
+		pr_context(device, context, "ctxt %d invalid ib size %lld\n",
+			context->id, ib->size);
+		return false;
+	}
+
+	/* Make sure that the address is mapped */
+	if (!kgsl_mmu_gpuaddr_in_range(private->pagetable, ib->gpuaddr)) {
+		pr_context(device, context, "ctxt %d invalid ib gpuaddr %llX\n",
+			context->id, ib->gpuaddr);
+		return false;
+	}
+
+	return true;
+}
+
+static inline int _verify_cmdobj(struct kgsl_device_private *dev_priv,
+		struct kgsl_context *context, struct kgsl_drawobj *drawobj[],
+		uint32_t count)
+{
+	struct kgsl_device *device = dev_priv->device;
+	struct kgsl_memobj_node *ib;
+	unsigned int i;
+
+	for (i = 0; i < count; i++) {
+		/* Verify the IBs before they get queued */
+		if (drawobj[i]->type == CMDOBJ_TYPE) {
+			struct kgsl_drawobj_cmd *cmdobj = CMDOBJ(drawobj[i]);
+
+			list_for_each_entry(ib, &cmdobj->cmdlist, node)
+				if (_verify_ib(dev_priv,
+					&ADRENO_CONTEXT(context)->base, ib)
+					== false)
+					return -EINVAL;
+		}
+
+		/* A3XX does not have support for drawobj profiling */
+		if (adreno_is_a3xx(ADRENO_DEVICE(device)) &&
+			(drawobj[i]->flags & KGSL_DRAWOBJ_PROFILING))
+			return -EOPNOTSUPP;
+	}
+
+	return 0;
+}
+
+static inline int _wait_for_room_in_context_queue(
+	struct adreno_context *drawctxt)
+{
+	int ret = 0;
 
 	/* Wait for room in the context queue */
 
