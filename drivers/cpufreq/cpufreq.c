@@ -2376,7 +2376,7 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
 	struct cpufreq_governor *old_gov;
 	int ret;
 
-#ifdef CONFIG_MACH_XIAOMI_A1
+#ifdef CONFIG_MACH_ZUK_Z2_PLUS
     if (!disable_underclock) {
 	if (new_policy->cpu < 2) {
 	    if (new_policy->max > UNDERCLK_MAX_LITTLECL)
