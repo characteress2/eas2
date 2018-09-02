@@ -93,6 +93,14 @@ static unsigned int sched_nr_latency = 1;
 unsigned int sysctl_sched_child_runs_first __read_mostly;
 
 /*
+ * Controls whether, when SD_SHARE_PKG_RESOURCES is on, if all
+ * tasks go to idle CPUs when woken. If this is off, note that the
+ * per-task flag PF_WAKE_UP_IDLE can still cause a task to go to an
+ * idle CPU upon being woken.
+ */
+unsigned int __read_mostly sysctl_sched_wake_to_idle = 0;
+
+/*
  * SCHED_OTHER wake-up granularity.
  * (default: 1 msec * (1 + ilog(ncpus)), units: nanoseconds)
  *
