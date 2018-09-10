@@ -200,11 +200,9 @@ struct page {
 #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	int _last_cpupid;
 #endif
-#ifdef CONFIG_PAGE_OWNER
-	int order;
-	gfp_t gfp_mask;
-	struct stack_trace trace;
-	unsigned long trace_entries[8];
+
+#ifdef CONFIG_ANDROID_SIMPLE_LMK
+	bool reserved_for_lmk;
 #endif
 }
 /*

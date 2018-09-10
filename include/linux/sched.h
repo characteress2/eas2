@@ -1931,6 +1931,23 @@ struct task_struct {
 	unsigned int	sequential_io;
 	unsigned int	sequential_io_avg;
 #endif
+#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+	unsigned long	task_state_change;
+#endif
+	int pagefault_disabled;
+	atomic64_t *concurrent_active_time;
+	atomic64_t *concurrent_policy_time;
+#ifdef CONFIG_ANDROID_SIMPLE_LMK
+	bool lmk_sigkill_sent;
+#endif
+/* CPU-specific state of this task */
+	struct thread_struct thread;
+/*
+ * WARNING: on x86, 'thread_struct' contains a variable-sized
+ * structure.  It *MUST* be at the end of 'task_struct'.
+ *
+ * Do not put anything below here!
+ */
 };
 
 /* Future-safe accessor for struct task_struct's cpus_allowed. */
