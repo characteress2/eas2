@@ -2360,7 +2360,7 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
 EXPORT_SYMBOL(cpufreq_get_policy);
 
 #ifdef CONFIG_MACH_ZUK_Z2_PLUS
-#define UNDERCLK_MAX_LITTLECL 1478400
+#define UNDERCLK_MAX_LITTLECL 1593600
 static bool disable_underclock;
 module_param_named(disable_underclock,
     disable_underclock, bool, S_IRUGO | S_IWUSR | S_IWGRP);
