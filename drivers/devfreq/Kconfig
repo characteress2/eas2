@@ -275,7 +275,3 @@ config DEVFREQ_MSM_CPUBW_BOOST_FREQ
 	  Boost frequency for the MSM DDR bus.
 
 endif
-
-source "drivers/devfreq/event/Kconfig"
-
-endif # PM_DEVFREQ
